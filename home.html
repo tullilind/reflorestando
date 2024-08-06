@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bem-vindo ao Reflorestando o Futuro</title>
+  <style>
+    /* Adicione seu CSS aqui */
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bem-vindo ao Reflorestando o Futuro</h1>
+  </header>
+
+  <section id="user-info">
+    <h2>Informações do Usuário</h2>
+    <p id="welcome-message">Carregando...</p>
+    <ul>
+      <li><strong>Nome:</strong> <span id="name"></span></li>
+      <li><strong>E-mail:</strong> <span id="email"></span></li>
+      <li><strong>Nível:</strong> <span id="nivel"></span></li>
+      <li><strong>Cidade:</strong> <span id="cidade"></span></li>
+      <li><strong>Celular:</strong> <span id="celular"></span></li>
+      <li><strong>Perfil:</strong> <span id="perfil"></span></li>
+    </ul>
+    <div>
+      <button id="generate-pix">Gerar PIX</button>
+      <button id="adoption-data">Dados de Adoção</button>
+      <button id="adopt-seedlings">Adotar Mudas</button>
+      <button id="view-history">Histórico</button>
+    </div>
+    <button id="logout-button">Sair</button>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Reflorestando o Futuro</p>
+  </footer>
+
+  <script type="module">
+    import { getToken, fetchWithAuth, removeToken } from './auth.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfoSection = document.getElementById('user-info');
+      const welcomeMessage = document.getElementById('welcome-message');
+      const nameElement = document.getElementById('name');
+      const emailElement = document.getElementById('email');
+      const nivelElement = document.getElementById('nivel');
+      const cidadeElement = document.getElementById('cidade');
+      const celularElement = document.getElementById('celular');
+      const perfilElement = document.getElementById('perfil');
+      const logoutButton = document.getElementById('logout-button');
+
+      const token = getToken();
+
+      if (token) {
+        fetchWithAuth('https://x8ki-letl-twmt.n7.xano.io/api:OnuuJIra/userinfo')
+        .then(response => response.json())
+        .then(data => {
+          welcomeMessage.textContent = `Bem-vindo, ${data.nome || 'Usuário'}${data.nivel ? ' ⭐' : ''}!`;
+          nameElement.textContent = data.nome || 'Não especificado';
+          emailElement.textContent = data.email || 'Não especificado';
+          nivelElement.textContent = `Nível ${data.nivel || 'Não especificado'}`;
+          cidadeElement.textContent = data.cidade || 'Não especificado';
+          celularElement.textContent = data.celular || 'Não especificado';
+          perfilElement.textContent = data.selecione_seu_perfil || 'Não especificado';
+
+          userInfoSection.style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Erro ao buscar os dados do usuário:', error);
+          alert('Não foi possível carregar os dados do usuário.');
+        });
+      } else {
+        alert('Você precisa estar logado para acessar esta página.');
+        window.location.href = 'index.html'; // Redireciona para a página de login se o token não estiver presente
+      }
+
+      logoutButton.addEventListener('click', () => {
+        removeToken();
+        window.location.href = 'index.html'; // Redireciona para a página de login
+      });
+
+      document.getElementById('generate-pix').addEventListener('click', () => {
+        window.location.href = 'generate-pix.html'; // Página para gerar PIX
+      });
+
+      document.getElementById('adoption-data').addEventListener('click', () => {
+        window.location.href = 'adoption-data.html'; // Página para dados de adoção
+      });
+
+      document.getElementById('adopt-seedlings').addEventListener('click', () => {
+        window.location.href = 'adopt-seedlings.html'; // Página para adotar mudas
+      });
+
+      document.getElementById('view-history').addEventListener('click', () => {
+        window.location.href = 'view-history.html'; // Página para histórico
+      });
+    });
+  </script>
+</body>
+</html>
+
+
